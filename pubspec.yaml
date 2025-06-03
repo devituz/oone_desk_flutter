@@ -43,6 +43,7 @@ dependencies:
   path_provider: ^2.1.5
   freezed_annotation: ^3.0.0
   hive_flutter: ^1.1.0
+  geolocator: ^14.0.1
 
 dev_dependencies:
   flutter_test:
@@ -97,3 +98,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  assets:
+    - assets/users_img/
+    - assets/logo/
+

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants/colors/colors.dart';
+import '../constants/theme/theme_helper.dart';
 import '../cubit/theme/theme_cubit.dart';
+import '../cubit/theme/theme_state.dart';
 
 class CustomTopAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomTopAppBar({super.key});
@@ -320,31 +322,35 @@ class _CustomTopAppBarState extends State<CustomTopAppBar> {
 
   @override
   Widget build(BuildContext context) {
+
+    final theme = AppThemeHelper.of(context);
+
+
     return AppBar(
       foregroundColor: Colors.white,
-      backgroundColor: context.watch<ThemeCubit>().state.maybeWhen(
-        lightMode: () => AppColors.body_color_kun,
-        darkMode: () => AppColors.body_color_tun,
-        orElse: () => AppColors.body_color_kun,
-      ),
       leading: IconButton(
-        icon: Icon(Icons.menu, color: Colors.grey[700]),
-        onPressed: () {},
+        icon: Icon(Icons.menu_open_outlined, color: theme.iconColor),
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
       ),
       actions: [
-        IconButton(
-          icon: Icon(
-            _isDarkMode ? Icons.dark_mode : Icons.wb_sunny, // Tunga o'tsa dark_mode, aks holda wb_sunny
-            color: Colors.grey[700],
-          ),
-          onPressed: () {
-            BlocProvider.of<ThemeCubit>(context).toggleTheme();
-
-            setState(() {
-              _isDarkMode = !_isDarkMode; // Holatni o‘zgartirish
-            });
-
-            // Agar siz app theme-ni ham o‘zgartirmoqchi bo‘lsangiz, bu yerga qo‘shasiz
+        BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, state) {
+            final isDarkMode = state.maybeWhen(
+              darkMode: () => true,
+              lightMode: () => false,
+              orElse: () => false,
+            );
+            return IconButton(
+              icon: Icon(
+                isDarkMode ? Icons.dark_mode : Icons.wb_sunny,
+                color: theme.iconColor,
+              ),
+              onPressed: () {
+                context.read<ThemeCubit>().toggleTheme();
+              },
+            );
           },
         ),
         Builder(
@@ -357,7 +363,7 @@ class _CustomTopAppBarState extends State<CustomTopAppBar> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Icon(Icons.notifications_none, color: Colors.grey[700], size: 26),
+                    Icon(Icons.notifications_none, color: theme.iconColor, size: 26),
                     if (unreadCount > 0)
                       Positioned(
                         left: 10,
@@ -367,7 +373,7 @@ class _CustomTopAppBarState extends State<CustomTopAppBar> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             gradient: LinearGradient(
-                              colors: [Colors.blue[800]!, Colors.blue[600]!],
+                              colors: [Color(0xFF2A407A), Color(0xFF2A407A)!],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
@@ -375,7 +381,7 @@ class _CustomTopAppBarState extends State<CustomTopAppBar> {
                           constraints: const BoxConstraints(minWidth: 13, minHeight: 10),
                           child: Text(
                             unreadCount.toString(),
-                            style: const TextStyle(
+                            style:  TextStyle(
                               color: Colors.white,
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
@@ -406,21 +412,15 @@ class _CustomTopAppBarState extends State<CustomTopAppBar> {
                   onTap: () => _showProfile(context),
                   child: Row(
                     children: [
-                      const CircleAvatar(
-                        backgroundColor: Colors.blueGrey,
-                        radius: 16,
-                        child: Icon(Icons.person, color: Colors.white, size: 18),
-                      ),
-                      const SizedBox(width: 6),
-                      const Text(
-                        'SHOHBOZBEK',
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8), // bu yerda dumaloqlik darajasi
+                        child: Image.asset(
+                          'assets/users_img/img.png',
+                          width: 32,
+                          height: 32,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      Icon(Icons.keyboard_arrow_down, color: Colors.grey[700], size: 20),
                     ],
                   ),
                 );
@@ -429,6 +429,7 @@ class _CustomTopAppBarState extends State<CustomTopAppBar> {
           ),
         ),
       ],
+
     );
   }
 }

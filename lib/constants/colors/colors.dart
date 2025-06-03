@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color bar_color = Color(0xFF614FE0);
+  static const Color bar_color = Color(0xFF04041D);
   static const Color body_color_kun = Color(0xFF6D67E4);
   //edfkerfkrefrfmromfwfmwfe
   static const Color body_color_tun = Color(0xFF0B0E14);

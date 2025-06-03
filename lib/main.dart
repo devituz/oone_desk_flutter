@@ -21,32 +21,24 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return BlocProvider(create: (_)=> ThemeCubit(),
 
     child: BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
-        return MaterialApp(
+        return  MaterialApp(
           theme: ThemeData(
+            useMaterial3: true,
             appBarTheme: AppBarTheme(
               backgroundColor: state.maybeWhen(
-                lightMode: () => AppColors.bar_color,
-                darkMode: () => AppColors.rangsifatroq,
-                orElse: () => AppColors.bar_color,
+                lightMode: () => AppColors.oq,
+                darkMode: () => AppColors.bar_color,
+                orElse: () => AppColors.oq,
               ),
             ),
-            useMaterial3: true,
           ),
-          debugShowCheckedModeBanner: false,
           home: const Login(),
-          themeMode: state.maybeWhen(
-            lightMode: () => ThemeMode.light,
-            darkMode: () => ThemeMode.dark,
-            orElse: () => ThemeMode.system,
-          ),
         );
       },
     ),
